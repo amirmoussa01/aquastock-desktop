@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block title %}
+    {% if produit %}Modifier{% else %}Ajouter{% endif %} un produit – Bignon AquaStock
+{% endblock %}
+
+{% block content %}
+
+<div class="row mb-3 align-items-center">
+    <div class="col">
+        <h4 class="fw-bold text-aqua mb-0">
+            {% if produit %}
+            <i class="bi bi-pencil-fill me-2"></i>Modifier : {{ produit.nom }}
+            {% else %}
+            <i class="bi bi-plus-circle-fill me-2"></i>Ajouter un produit
+            {% endif %}
+        </h4>
+    </div>
+    <div class="col-auto">
+        <a href="{% url 'produits:liste' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Retour
+        </a>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">
+                        <i class="bi bi-basket2 me-1"></i>Nom du produit *
+                    </label>
+                    <input type="text" name="nom" class="form-control"
+                           value="{{ produit.nom|default:'' }}"
+                           placeholder="Ex: Tilapia frais" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">
+                        <i class="bi bi-tags me-1"></i>Catégorie *
+                    </label>
+                    <select name="categorie" class="form-select" required>
+                        <option value="">-- Choisir une catégorie --</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat.pk }}"
+                            {% if produit and produit.categorie_id == cat.pk %}selected{% endif %}>
+                            {{ cat.nom }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">
+                        <i class="bi bi-arrow-down-circle me-1"></i>Prix d'achat (FCFA) *
+                    </label>
+                    <input type="number" name="prix_achat" class="form-control"
+                           value="{{ produit.prix_achat|default:'' }}"
+                           step="1" min="0"
+                           placeholder="0" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">
+                        <i class="bi bi-arrow-up-circle me-1"></i>Prix de vente (FCFA) *
+                    </label>
+                    <input type="number" name="prix_vente" class="form-control"
+                           value="{{ produit.prix_vente|default:'' }}"
+                           step="1" min="0"
+                           placeholder="0" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">
+                        <i class="bi bi-rulers me-1"></i>Unité
+                    </label>
+                    <select name="unite" class="form-select">
+                        <option value="kg"    {% if produit.unite == 'kg' %}selected{% endif %}>Kilogramme (kg)</option>
+                        <option value="g"     {% if produit.unite == 'g' %}selected{% endif %}>Gramme (g)</option>
+                        <option value="pièce" {% if produit.unite == 'pièce' %}selected{% endif %}>Pièce</option>
+                        <option value="lot"   {% if produit.unite == 'lot' %}selected{% endif %}>Lot</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">
+                        <i class="bi bi-box-seam me-1"></i>Stock actuel
+                    </label>
+                    <input type="number" name="stock_actuel" class="form-control"
+                           value="{{ produit.stock_actuel|default:'0' }}"
+                           step="0.01" min="0">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">
+                        <i class="bi bi-bell me-1"></i>Seuil alerte stock
+                    </label>
+                    <input type="number" name="seuil_alerte" class="form-control"
+                           value="{{ produit.seuil_alerte|default:'5' }}"
+                           step="0.01" min="0">
+                    <div class="form-text">Alerte déclenchée en dessous de ce seuil</div>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label fw-bold">
+                        <i class="bi bi-card-text me-1"></i>Description
+                    </label>
+                    <textarea name="description" class="form-control" rows="3"
+                              placeholder="Description optionnelle du produit">{{ produit.description|default:'' }}</textarea>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label fw-bold">
+                        <i class="bi bi-image me-1"></i>Image du produit
+                    </label>
+                    <input type="file" name="image" class="form-control" accept="image/*">
+                    {% if produit.image %}
+                    <div class="mt-2">
+                        <img src="{{ produit.image.url }}" height="80"
+                             class="rounded border" alt="Image actuelle">
+                        <small class="text-muted ms-2">Image actuelle</small>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="col-12 d-flex justify-content-end gap-2 mt-2">
+                    <a href="{% url 'produits:liste' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-lg me-1"></i>Annuler
+                    </a>
+                    <button type="submit" class="btn btn-aqua text-white px-4">
+                        <i class="bi bi-floppy-fill me-1"></i>Enregistrer
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

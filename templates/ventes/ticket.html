@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% block title %}Ticket – {{ vente.reference }}{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+
+        <div class="d-flex justify-content-between mb-3">
+            <a href="{% url 'ventes:liste' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Retour
+            </a>
+            <button onclick="window.print()" class="btn btn-aqua text-white">
+                <i class="bi bi-printer-fill me-1"></i>Imprimer
+            </button>
+        </div>
+
+        <!-- TICKET -->
+        <div class="card border-0 shadow" id="ticket">
+            <div class="card-body p-4">
+
+                <!-- EN-TETE -->
+                <div class="text-center mb-3">
+                    <img src="{% load static %}{% static 'img/logo.png' %}"
+                         height="60" alt="Logo" class="mb-2">
+                    <h5 class="fw-bold mb-0">Bignon AquaStock</h5>
+                    <small class="text-muted">Ticket de caisse</small>
+                    <hr>
+                </div>
+
+                <!-- INFOS VENTE -->
+                <div class="row small mb-3">
+                    <div class="col-6">
+                        <div class="text-muted">Référence</div>
+                        <div class="fw-bold font-monospace">{{ vente.reference }}</div>
+                    </div>
+                    <div class="col-6 text-end">
+                        <div class="text-muted">Date</div>
+                        <div class="fw-bold">{{ vente.date_vente|date:"d/m/Y H:i" }}</div>
+                    </div>
+                    <div class="col-6 mt-2">
+                        <div class="text-muted">Vendeur</div>
+                        <div class="fw-bold">
+                            {{ vente.vendeur.get_full_name|default:vente.vendeur.username }}
+                        </div>
+                    </div>
+                    <div class="col-6 mt-2 text-end">
+                        <div class="text-muted">Paiement</div>
+                        <div class="fw-bold">
+                            {% if vente.mode_paiement == 'cash' %}
+                            <i class="bi bi-cash me-1"></i>Cash
+                            {% else %}
+                            <i class="bi bi-phone me-1"></i>Mobile Money
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- LIGNES -->
+                <table class="table table-sm mb-0">
+                    <thead>
+                        <tr class="small">
+                            <th>Produit</th>
+                            <th class="text-center">Qté</th>
+                            <th class="text-end">Prix</th>
+                            <th class="text-end">S/Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ligne in lignes %}
+                        <tr class="small">
+                            <td>{{ ligne.produit.nom }}</td>
+                            <td class="text-center">
+                                {{ ligne.quantite }} {{ ligne.produit.unite }}
+                            </td>
+                            <td class="text-end">
+                                {{ ligne.prix_unitaire|floatformat:0 }}
+                            </td>
+                            <td class="text-end fw-bold">
+                                {{ ligne.sous_total|floatformat:0 }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <hr>
+
+                <!-- TOTAL -->
+                <div class="d-flex justify-content-between fw-bold fs-5">
+                    <span><i class="bi bi-cash-stack me-1"></i>TOTAL</span>
+                    <span class="text-aqua">
+                        {{ vente.montant_total|floatformat:0 }} FCFA
+                    </span>
+                </div>
+
+                <hr>
+
+                <div class="text-center text-muted small mt-3">
+                    <i class="bi bi-heart-fill text-danger me-1"></i>
+                    Merci pour votre achat !
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<style>
+@media print {
+    #navbar-main, #footer-main, .btn, .d-flex.justify-content-between.mb-3 {
+        display: none !important;
+    }
+    #ticket {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+}
+</style>
+{% endblock %}

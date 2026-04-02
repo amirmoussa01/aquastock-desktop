@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Supprimer dépense – Bignon AquaStock{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body p-5">
+                <i class="bi bi-trash3-fill text-danger fs-1 mb-3 d-block"></i>
+                <h5 class="fw-bold mb-2">Confirmer la suppression</h5>
+                <p class="text-muted">
+                    Supprimer la dépense
+                    <strong>{{ depense.get_categorie_display }}</strong>
+                    de <strong>{{ depense.montant|floatformat:0 }} FCFA</strong> ?
+                </p>
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <a href="{% url 'depenses:liste' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>Annuler
+                    </a>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash3-fill me-1"></i>Supprimer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

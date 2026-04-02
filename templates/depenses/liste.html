@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block title %}Dépenses – Bignon AquaStock{% endblock %}
+
+{% block content %}
+
+<div class="row mb-3 align-items-center">
+    <div class="col">
+        <h4 class="fw-bold text-aqua mb-0">
+            <i class="bi bi-wallet2 me-2"></i>Gestion des dépenses
+        </h4>
+    </div>
+    <div class="col-auto">
+        <a href="{% url 'depenses:ajouter' %}" class="btn btn-aqua text-white">
+            <i class="bi bi-plus-circle-fill me-1"></i>Ajouter une dépense
+        </a>
+    </div>
+</div>
+
+<!-- FILTRE PAR CATEGORIE -->
+<div class="card border-0 shadow-sm mb-3">
+    <div class="card-body py-2">
+        <form method="GET" class="d-flex gap-2 align-items-center">
+            <i class="bi bi-tag text-muted"></i>
+            <select name="categorie" class="form-select form-select-sm"
+                    style="max-width:250px;">
+                <option value="">-- Toutes les catégories --</option>
+                {% for val, label in categories %}
+                <option value="{{ val }}"
+                    {% if categorie_filtre == val %}selected{% endif %}>
+                    {{ label }}
+                </option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-sm btn-aqua text-white">
+                <i class="bi bi-funnel me-1"></i>Filtrer
+            </button>
+            {% if categorie_filtre %}
+            <a href="{% url 'depenses:liste' %}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-x-lg me-1"></i>Effacer
+            </a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<!-- CARTES STATS -->
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center p-4">
+                <div class="stat-icon bg-danger-soft mb-3">
+                    <i class="bi bi-calendar-day text-danger fs-3"></i>
+                </div>
+                <div class="fs-2 fw-bold text-danger">
+                    {{ total_jour|floatformat:0 }}
+                </div>
+                <div class="text-muted small">FCFA dépensés aujourd'hui</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center p-4">
+                <div class="stat-icon bg-warning-soft mb-3">
+                    <i class="bi bi-wallet2 text-warning fs-3"></i>
+                </div>
+                <div class="fs-2 fw-bold text-warning">
+                    {{ total_global|floatformat:0 }}
+                </div>
+                <div class="text-muted small">FCFA dépensés au total</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TABLEAU -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th><i class="bi bi-calendar3 me-1"></i>Date</th>
+                    <th><i class="bi bi-tag me-1"></i>Catégorie</th>
+                    <th><i class="bi bi-card-text me-1"></i>Description</th>
+                    <th><i class="bi bi-cash me-1"></i>Montant</th>
+                    <th><i class="bi bi-person me-1"></i>Enregistré par</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for depense in depenses %}
+                <tr>
+                    <td class="text-muted small">
+                        {{ depense.date_depense|date:"d/m/Y H:i" }}
+                    </td>
+                    <td>
+                        <span class="badge bg-secondary">
+                            {{ depense.get_categorie_display }}
+                        </span>
+                    </td>
+                    <td>{{ depense.description }}</td>
+                    <td class="fw-bold text-danger">
+                        {{ depense.montant|floatformat:0 }} FCFA
+                    </td>
+                    <td>
+                        {{ depense.enregistre_par.get_full_name|default:depense.enregistre_par.username }}
+                    </td>
+                    <td>
+                        {% if user.role == 'admin' %}
+                        <a href="{% url 'depenses:supprimer' depense.pk %}"
+                           class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash3-fill"></i>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-5">
+                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                        Aucune dépense enregistrée.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% include 'includes/pagination.html' %}
+
+{% endblock %}

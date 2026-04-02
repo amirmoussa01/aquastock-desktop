@@ -1,0 +1,22 @@
+[
+  {
+    "model": "accounts.utilisateur",
+    "pk": 1,
+    "fields": {
+      "username": "admin",
+      "password": "pbkdf2_sha256$600000$Rnt62skaRTZDiPVEnpLdKU$CjdnpoMy53ezDiclVjW1u6sD5tyF1aNzRjADkSoyevo=",
+      "first_name": "Administrateur",
+      "last_name": "AquaStock",
+      "email": "",
+      "is_staff": true,
+      "is_active": true,
+      "is_superuser": true,
+      "role": "admin",
+      "telephone": "",
+      "est_actif": true,
+      "date_creation": "2026-01-01T00:00:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]

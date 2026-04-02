@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% block title %}Nouvelle vente – Bignon AquaStock{% endblock %}
+
+{% block content %}
+
+<div class="row mb-3 align-items-center">
+    <div class="col">
+        <h4 class="fw-bold text-aqua mb-0">
+            <i class="bi bi-receipt me-2"></i>Nouvelle vente
+        </h4>
+    </div>
+    <div class="col-auto">
+        <a href="{% url 'ventes:liste' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Retour
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+
+    <!-- FORMULAIRE -->
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header text-white" style="background-color:#0a2d6e;">
+                <i class="bi bi-cart-fill me-2"></i>Produits vendus
+            </div>
+            <div class="card-body">
+                <form method="POST" id="form-vente">
+                    {% csrf_token %}
+
+                    <!-- LIGNES DE VENTE -->
+                    <div id="lignes-vente">
+                        <div class="row g-2 align-items-end mb-2 ligne-produit">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small">
+                                    <i class="bi bi-basket2 me-1"></i>Produit
+                                </label>
+                                <select name="produit_id" class="form-select select-produit" required>
+                                    <option value="">-- Choisir --</option>
+                                    {% for produit in produits %}
+                                    <option value="{{ produit.pk }}"
+                                            data-prix="{{ produit.prix_vente }}"
+                                            data-unite="{{ produit.unite }}">
+                                        {{ produit.nom }} – {{ produit.prix_vente|floatformat:0 }} FCFA/{{ produit.unite }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold small">
+                                    <i class="bi bi-123 me-1"></i>Quantité
+                                </label>
+                                <input type="number" name="quantite"
+                                       class="form-control input-quantite"
+                                       step="0.01" min="0.01"
+                                       placeholder="0" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold small">
+                                    <i class="bi bi-cash me-1"></i>Sous-total
+                                </label>
+                                <input type="text" class="form-control sous-total-display bg-light"
+                                       placeholder="0 FCFA" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BOUTON AJOUTER LIGNE -->
+                    <button type="button" class="btn btn-outline-primary btn-sm mb-4"
+                            id="btn-ajouter-ligne">
+                        <i class="bi bi-plus-circle me-1"></i>Ajouter un produit
+                    </button>
+
+                    <!-- MODE PAIEMENT -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">
+                            <i class="bi bi-cash-stack me-1"></i>Mode de paiement
+                        </label>
+                        <div class="d-flex gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio"
+                                       name="mode_paiement" value="cash"
+                                       id="cash" checked>
+                                <label class="form-check-label" for="cash">
+                                    <i class="bi bi-cash me-1"></i>Cash
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio"
+                                       name="mode_paiement" value="mobile_money"
+                                       id="mobile">
+                                <label class="form-check-label" for="mobile">
+                                    <i class="bi bi-phone me-1"></i>Mobile Money
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{% url 'ventes:liste' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-lg me-1"></i>Annuler
+                        </a>
+                        <button type="submit" class="btn btn-aqua text-white px-4">
+                            <i class="bi bi-check-circle-fill me-1"></i>Valider la vente
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECAP TOTAL -->
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header text-white" style="background-color:#0a2d6e;">
+                <i class="bi bi-calculator me-2"></i>Récapitulatif
+            </div>
+            <div class="card-body text-center py-5">
+                <div class="text-muted small mb-2">Total à payer</div>
+                <div class="fs-1 fw-bold text-aqua" id="total-general">0</div>
+                <div class="text-muted">FCFA</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Template d'une ligne produit
+function nouvelleLigne() {
+    const produits = `{% for produit in produits %}<option value="{{ produit.pk }}" data-prix="{{ produit.prix_vente }}" data-unite="{{ produit.unite }}">{{ produit.nom }} – {{ produit.prix_vente|floatformat:0 }} FCFA/{{ produit.unite }}</option>{% endfor %}`;
+
+    return `
+    <div class="row g-2 align-items-end mb-2 ligne-produit">
+        <div class="col-md-6">
+            <select name="produit_id" class="form-select select-produit" required>
+                <option value="">-- Choisir --</option>
+                ${produits}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <input type="number" name="quantite"
+                   class="form-control input-quantite"
+                   step="0.01" min="0.01" placeholder="0" required>
+        </div>
+        <div class="col-md-2">
+            <input type="text" class="form-control sous-total-display bg-light"
+                   placeholder="0 FCFA" readonly>
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-outline-danger btn-sm btn-suppr-ligne">
+                <i class="bi bi-trash3-fill"></i>
+            </button>
+        </div>
+    </div>`;
+}
+
+// Calcul sous-total et total
+function calculerTotaux() {
+    let total = 0;
+    document.querySelectorAll('.ligne-produit').forEach(ligne => {
+        const select = ligne.querySelector('.select-produit');
+        const quantite = parseFloat(ligne.querySelector('.input-quantite').value) || 0;
+        const prix = parseFloat(select.selectedOptions[0]?.dataset.prix) || 0;
+        const sousTotal = prix * quantite;
+        ligne.querySelector('.sous-total-display').value =
+            sousTotal > 0 ? sousTotal.toLocaleString('fr-FR') + ' FCFA' : '';
+        total += sousTotal;
+    });
+    document.getElementById('total-general').textContent =
+        total.toLocaleString('fr-FR');
+}
+
+// Ajouter une ligne
+document.getElementById('btn-ajouter-ligne').addEventListener('click', () => {
+    document.getElementById('lignes-vente').insertAdjacentHTML('beforeend', nouvelleLigne());
+    attacherEvenements();
+});
+
+// Supprimer une ligne
+function attacherEvenements() {
+    document.querySelectorAll('.btn-suppr-ligne').forEach(btn => {
+        btn.onclick = function() {
+            this.closest('.ligne-produit').remove();
+            calculerTotaux();
+        };
+    });
+    document.querySelectorAll('.select-produit, .input-quantite').forEach(el => {
+        el.oninput = calculerTotaux;
+    });
+}
+
+attacherEvenements();
+</script>
+{% endblock %}
+

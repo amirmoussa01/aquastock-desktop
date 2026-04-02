@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Annuler vente – Bignon AquaStock{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body p-5">
+                <i class="bi bi-x-circle-fill text-danger fs-1 mb-3 d-block"></i>
+                <h5 class="fw-bold mb-2">Annuler la vente ?</h5>
+                <p class="text-muted">
+                    Voulez-vous vraiment annuler la vente
+                    <strong>{{ vente.reference }}</strong>
+                    d'un montant de
+                    <strong>{{ vente.montant_total|floatformat:0 }} FCFA</strong> ?
+                </p>
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <a href="{% url 'ventes:liste' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>Retour
+                    </a>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-x-circle-fill me-1"></i>Confirmer l'annulation
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

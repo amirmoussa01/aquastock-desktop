@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% block title %}
+    {% if utilisateur %}Modifier{% else %}Ajouter{% endif %} un utilisateur – Bignon AquaStock
+{% endblock %}
+
+{% block content %}
+
+<div class="row mb-3 align-items-center">
+    <div class="col">
+        <h4 class="fw-bold text-aqua mb-0">
+            {% if utilisateur %}
+            <i class="bi bi-pencil-fill me-2"></i>Modifier : {{ utilisateur.get_full_name }}
+            {% else %}
+            <i class="bi bi-person-plus-fill me-2"></i>Ajouter un utilisateur
+            {% endif %}
+        </h4>
+    </div>
+    <div class="col-auto">
+        <a href="{% url 'accounts:utilisateurs' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Retour
+        </a>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row g-3">
+
+                        <!-- Identifiant uniquement à la création -->
+                        {% if not utilisateur %}
+                        <div class="col-12">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-at me-1"></i>Identifiant de connexion *
+                            </label>
+                            <input type="text" name="username"
+                                   class="form-control"
+                                   placeholder="Ex: vendeur01"
+                                   required>
+                            <div class="form-text">
+                                Cet identifiant ne pourra pas être modifié.
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="col-12">
+                            <label class="form-label fw-bold text-muted">
+                                <i class="bi bi-at me-1"></i>Identifiant
+                            </label>
+                            <input type="text" class="form-control bg-light"
+                                   value="{{ utilisateur.username }}" disabled>
+                        </div>
+                        {% endif %}
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-person me-1"></i>Prénom *
+                            </label>
+                            <input type="text" name="first_name" class="form-control"
+                                   value="{{ utilisateur.first_name|default:'' }}"
+                                   placeholder="Prénom" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-person me-1"></i>Nom *
+                            </label>
+                            <input type="text" name="last_name" class="form-control"
+                                   value="{{ utilisateur.last_name|default:'' }}"
+                                   placeholder="Nom de famille" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-phone me-1"></i>Téléphone
+                            </label>
+                            <input type="text" name="telephone" class="form-control"
+                                   value="{{ utilisateur.telephone|default:'' }}"
+                                   placeholder="Ex: +229 97000000">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-shield me-1"></i>Rôle *
+                            </label>
+                            <select name="role" class="form-select" required>
+                                <option value="vendeur"
+                                    {% if utilisateur.role == 'vendeur' %}selected{% endif %}>
+                                    <i class="bi bi-person-fill"></i> Vendeur
+                                </option>
+                                <option value="gestionnaire"
+                                    {% if utilisateur.role == 'gestionnaire' %}selected{% endif %}>
+                                    Gestionnaire
+                                </option>
+                                <option value="admin"
+                                    {% if utilisateur.role == 'admin' %}selected{% endif %}>
+                                    Administrateur
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <hr>
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-key-fill me-1"></i>
+                                {% if utilisateur %}
+                                    Nouveau mot de passe
+                                    <span class="text-muted fw-normal">(laisser vide pour ne pas changer)</span>
+                                {% else %}
+                                    Mot de passe *
+                                {% endif %}
+                            </label>
+                            <input type="password" name="password"
+                                   class="form-control"
+                                   placeholder="Mot de passe"
+                                   {% if not utilisateur %}required{% endif %}>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-key-fill me-1"></i>
+                                Confirmer le mot de passe
+                                {% if utilisateur %}
+                                    <span class="text-muted fw-normal">(si changement)</span>
+                                {% endif %}
+                            </label>
+                            <input type="password" name="password2"
+                                   class="form-control"
+                                   placeholder="Confirmer le mot de passe"
+                                   {% if not utilisateur %}required{% endif %}>
+                        </div>
+
+                        <div class="col-12 d-flex justify-content-end gap-2 mt-2">
+                            <a href="{% url 'accounts:utilisateurs' %}"
+                               class="btn btn-outline-secondary">
+                                <i class="bi bi-x-lg me-1"></i>Annuler
+                            </a>
+                            <button type="submit" class="btn btn-aqua text-white px-4">
+                                <i class="bi bi-floppy-fill me-1"></i>Enregistrer
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

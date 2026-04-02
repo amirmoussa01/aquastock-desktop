@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}Catégories – Bignon AquaStock{% endblock %}
+
+{% block content %}
+
+<div class="row mb-3 align-items-center">
+    <div class="col">
+        <h4 class="fw-bold text-aqua mb-0">
+            <i class="bi bi-tags-fill me-2"></i>Catégories
+        </h4>
+    </div>
+    <div class="col-auto">
+        <a href="{% url 'produits:liste' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Retour
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+
+    <!-- FORMULAIRE AJOUT -->
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header text-white" style="background-color: #0a2d6e;">
+                <i class="bi bi-plus-circle me-2"></i>Nouvelle catégorie
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nom *</label>
+                        <input type="text" name="nom" class="form-control"
+                               placeholder="Ex: Poissons frais" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Description</label>
+                        <textarea name="description" class="form-control"
+                                  rows="3" placeholder="Optionnel"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-aqua text-white w-100">
+                        <i class="bi bi-floppy-fill me-1"></i>Enregistrer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- LISTE CATEGORIES -->
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th><i class="bi bi-tags me-1"></i>Catégorie</th>
+                            <th><i class="bi bi-card-text me-1"></i>Description</th>
+                            <th><i class="bi bi-basket2 me-1"></i>Produits</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cat in categories %}
+                        <tr>
+                            <td class="fw-bold">{{ cat.nom }}</td>
+                            <td class="text-muted">{{ cat.description|default:"–" }}</td>
+                            <td>
+                                <span class="badge bg-primary">
+                                    {{ cat.produits.count }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted py-5">
+                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                Aucune catégorie. Créez-en une.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

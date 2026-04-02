@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion – Bignon AquaStock</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-icons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body id="login-page">
+
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height:100vh;">
+        <div class="col-md-4 col-sm-8 col-11">
+
+            <div class="card shadow-lg border-0">
+                <div class="card-header text-center py-4" id="login-header">
+                    <img src="{% static 'img/logo.png' %}" height="80" alt="Logo" class="mb-2">
+                    <div class="text-white fw-bold fs-5">Bignon AquaStock</div>
+                    <div class="text-white-50 small">Système de gestion</div>
+                </div>
+
+                <div class="card-body p-4">
+                    <h6 class="text-center text-muted mb-4">
+                        <i class="bi bi-lock-fill me-2"></i>Connexion à votre compte
+                    </h6>
+
+                    {% for message in messages %}
+                    <div class="alert alert-danger d-flex align-items-center gap-2">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <span>{{ message }}</span>
+                    </div>
+                    {% endfor %}
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-person-fill me-1"></i>Identifiant
+                            </label>
+                            <input
+                                type="text"
+                                name="username"
+                                class="form-control form-control-lg"
+                                placeholder="Votre identifiant"
+                                required
+                                autofocus
+                            >
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-key-fill me-1"></i>Mot de passe
+                            </label>
+                            <input
+                                type="password"
+                                name="password"
+                                class="form-control form-control-lg"
+                                placeholder="Votre mot de passe"
+                                required
+                            >
+                        </div>
+
+                        <button type="submit" class="btn btn-lg w-100 btn-aqua text-white fw-bold">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <p class="text-center text-muted mt-3">
+                <small>
+                    <i class="bi bi-c-circle me-1"></i>2026 Bignon AquaStock
+                </small>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}Historique stock – Bignon AquaStock{% endblock %}
+
+{% block content %}
+
+<div class="row mb-3 align-items-center">
+    <div class="col">
+        <h4 class="fw-bold text-aqua mb-0">
+            <i class="bi bi-clock-history me-2"></i>Historique complet des mouvements
+        </h4>
+    </div>
+    <div class="col-auto">
+        <a href="{% url 'stock:liste' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Retour
+        </a>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover table-sm mb-0">
+            <thead>
+                <tr>
+                    <th><i class="bi bi-calendar3 me-1"></i>Date</th>
+                    <th><i class="bi bi-basket2 me-1"></i>Produit</th>
+                    <th><i class="bi bi-arrow-left-right me-1"></i>Type</th>
+                    <th><i class="bi bi-123 me-1"></i>Quantité</th>
+                    <th><i class="bi bi-bar-chart me-1"></i>Avant</th>
+                    <th><i class="bi bi-bar-chart-fill me-1"></i>Après</th>
+                    <th><i class="bi bi-chat-text me-1"></i>Motif</th>
+                    <th><i class="bi bi-person me-1"></i>Employé</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in mouvements %}
+                <tr>
+                    <td class="text-muted small">{{ m.date_mouvement|date:"d/m/Y H:i" }}</td>
+                    <td class="fw-bold">{{ m.produit.nom }}</td>
+                    <td>
+                        {% if m.type_mouvement == 'entree' %}
+                        <span class="badge bg-success">
+                            <i class="bi bi-arrow-up-circle me-1"></i>Entrée
+                        </span>
+                        {% elif m.type_mouvement == 'sortie' %}
+                        <span class="badge bg-danger">
+                            <i class="bi bi-arrow-down-circle me-1"></i>Sortie
+                        </span>
+                        {% else %}
+                        <span class="badge bg-warning text-dark">
+                            <i class="bi bi-pencil me-1"></i>Ajustement
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td>{{ m.quantite }} {{ m.produit.unite }}</td>
+                    <td class="text-muted">{{ m.stock_avant }}</td>
+                    <td class="fw-bold">{{ m.stock_apres }}</td>
+                    <td class="text-muted small">{{ m.motif|default:"–" }}</td>
+                    <td>{{ m.utilisateur.get_full_name|default:m.utilisateur.username }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center text-muted py-5">
+                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                        Aucun mouvement enregistré.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% include 'includes/pagination.html' %}
+
+{% endblock %}
+
+

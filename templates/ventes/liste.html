@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block title %}Ventes – Bignon AquaStock{% endblock %}
+
+{% block content %}
+
+<div class="row mb-3 align-items-center">
+    <div class="col">
+        <h4 class="fw-bold text-aqua mb-0">
+            <i class="bi bi-receipt me-2"></i>Liste des ventes
+        </h4>
+    </div>
+    <div class="col-auto">
+        <a href="{% url 'ventes:nouvelle' %}" class="btn btn-aqua text-white">
+            <i class="bi bi-plus-circle-fill me-1"></i>Nouvelle vente
+        </a>
+    </div>
+</div>
+
+<!-- FILTRE PAR DATE -->
+<div class="card border-0 shadow-sm mb-3">
+    <div class="card-body py-2">
+        <form method="GET" class="d-flex gap-2 align-items-center">
+            <i class="bi bi-calendar3 text-muted"></i>
+            <input type="date" name="date" class="form-control form-control-sm"
+                   style="max-width:200px;"
+                   value="{{ date_filtre }}">
+            <button type="submit" class="btn btn-sm btn-aqua text-white">
+                <i class="bi bi-funnel me-1"></i>Filtrer
+            </button>
+            {% if date_filtre %}
+            <a href="{% url 'ventes:liste' %}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-x-lg me-1"></i>Effacer
+            </a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th><i class="bi bi-hash me-1"></i>Référence</th>
+                    <th><i class="bi bi-calendar3 me-1"></i>Date</th>
+                    <th><i class="bi bi-person me-1"></i>Vendeur</th>
+                    <th><i class="bi bi-cash me-1"></i>Mode paiement</th>
+                    <th><i class="bi bi-cash-stack me-1"></i>Total</th>
+                    <th><i class="bi bi-circle-fill me-1"></i>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vente in ventes %}
+                <tr>
+                    <td class="fw-bold font-monospace">{{ vente.reference }}</td>
+                    <td class="text-muted small">
+                        {{ vente.date_vente|date:"d/m/Y H:i" }}
+                    </td>
+                    <td>{{ vente.vendeur.get_full_name|default:vente.vendeur.username }}</td>
+                    <td>
+                        {% if vente.mode_paiement == 'cash' %}
+                        <span class="badge bg-success">
+                            <i class="bi bi-cash me-1"></i>Cash
+                        </span>
+                        {% else %}
+                        <span class="badge bg-info text-dark">
+                            <i class="bi bi-phone me-1"></i>Mobile Money
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td class="fw-bold">{{ vente.montant_total|floatformat:0 }} FCFA</td>
+                    <td>
+                        {% if vente.statut == 'validee' %}
+                        <span class="badge bg-success">
+                            <i class="bi bi-check-circle me-1"></i>Validée
+                        </span>
+                        {% else %}
+                        <span class="badge bg-danger">
+                            <i class="bi bi-x-circle me-1"></i>Annulée
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td class="d-flex gap-1">
+                        <a href="{% url 'ventes:ticket' vente.pk %}"
+                           class="btn btn-sm btn-outline-primary" title="Voir ticket">
+                            <i class="bi bi-printer-fill"></i>
+                        </a>
+                        {% if vente.statut == 'validee' %}
+                        <a href="{% url 'ventes:annuler' vente.pk %}"
+                           class="btn btn-sm btn-outline-danger" title="Annuler">
+                            <i class="bi bi-x-circle-fill"></i>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-5">
+                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                        Aucune vente enregistrée.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% include 'includes/pagination.html' %}
+
+{% endblock %}
