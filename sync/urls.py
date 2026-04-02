@@ -5,4 +5,5 @@ app_name = 'sync'
 
 urlpatterns = [
     path('statut/', views.statut_sync, name='statut'),
+    path('lancer/', views.lancer_sync, name='lancer'),
 ]

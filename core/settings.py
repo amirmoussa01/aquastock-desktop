@@ -112,7 +112,7 @@ NOM_ENTREPRISE = 'Bignon AquaStock'
 # ─────────────────────────────────────
 # Synchronisation serveur
 # ─────────────────────────────────────
-SERVEUR_URL  = 'https://app-03e4d217-5880-4510-b79f-957dbffd2c21.cleverapps.io'
-MACHINE_ID   = 'machine_01'
-SYNC_TOKEN   = '9cbfd26248df004c518b4f03c7fe33604e48c02f'
-SYNC_INTERVAL = 30
+SERVEUR_URL   = 'https://app-03e4d217-5880-4510-b79f-957dbffd2c21.cleverapps.io'
+MACHINE_ID    = 'machine_01'
+SYNC_TOKEN    = '9cbfd26248df004c518b4f03c7fe33604e48c02f'
+SYNC_INTERVAL = 300  # 5 minutes entre chaque sync automatique

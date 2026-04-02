@@ -1,22 +1,25 @@
 [
-  {
-    "model": "accounts.utilisateur",
-    "pk": 1,
-    "fields": {
-      "username": "admin",
-      "password": "pbkdf2_sha256$600000$Rnt62skaRTZDiPVEnpLdKU$CjdnpoMy53ezDiclVjW1u6sD5tyF1aNzRjADkSoyevo=",
-      "first_name": "Administrateur",
-      "last_name": "AquaStock",
-      "email": "",
-      "is_staff": true,
-      "is_active": true,
-      "is_superuser": true,
-      "role": "admin",
-      "telephone": "",
-      "est_actif": true,
-      "date_creation": "2026-01-01T00:00:00Z",
-      "groups": [],
-      "user_permissions": []
-    }
+{
+  "model": "accounts.utilisateur",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$HD40jq4Vs4MK8KeAzyV3KD$U7qG7O8AnqKyLshyeizLOMFjAbn8YB1o0ACm/D6gEF4=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "Administrateur",
+    "last_name": "AquaStock",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-02T08:03:29.776Z",
+    "uuid": "1ae6f8fc-bcc2-4180-bad5-511d34087e72",
+    "role": "admin",
+    "telephone": null,
+    "est_actif": true,
+    "date_creation": "2026-04-02T08:03:30.118Z",
+    "groups": [],
+    "user_permissions": []
   }
+}
 ]
